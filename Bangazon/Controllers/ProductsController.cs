@@ -71,7 +71,8 @@ namespace Bangazon.Controllers
             //We weren't getting a user, we were only getting a userId, so we needed to remove User from the ModelState so the conditional would return true.
             //We may need to change it to product.User later if we use a view model.
             ModelState.Remove("User");
-           
+           //TODO::  CONDITIONALLY RENDER NAV BAR, AND FIGURE OUT HOW TO GET THE FORM TO WORK WITHOUT GIVING 
+           //THE USER THE OPTION TO SELECT FROM A LIST OF USERS
             if (ModelState.IsValid)
             {
                 //We added the next two lines to get the user to check the ID.
@@ -79,6 +80,7 @@ namespace Bangazon.Controllers
                 product.UserId = user.Id;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                //redirects to the new product details by selecting the details view along with the new parameter
                 return RedirectToAction("Details", new
                 {
                    id = product.ProductId
