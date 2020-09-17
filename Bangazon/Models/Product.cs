@@ -45,6 +45,7 @@ namespace Bangazon.Models
 
         [Required]
         [Display(Name="Product Category")]
+        [Range(1, 1000, ErrorMessage = "Please Select a Product Category")]
         public int ProductTypeId { get; set; }
         
         public ProductType ProductType { get; set; }
