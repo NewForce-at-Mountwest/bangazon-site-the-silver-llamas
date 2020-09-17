@@ -65,7 +65,9 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
         {
+            //ModelState.Remove("User");
             ModelState.Remove("User");
+            ModelState.Remove("UserId");
 
             if (ModelState.IsValid)
             {
@@ -109,6 +111,7 @@ namespace Bangazon.Controllers
             }
 
             ModelState.Remove("User");
+            ModelState.Remove("UserId");
 
             if (ModelState.IsValid)
             {
