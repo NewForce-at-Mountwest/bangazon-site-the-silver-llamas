@@ -9,6 +9,7 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Bangazon.Models.ProductViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -56,9 +57,20 @@ namespace Bangazon.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            return View();
+            //create an instance of the ProductCreateViewModel to get a list of ProductTypes for the dropdown
+            ProductCreateViewModel ViewModel = new ProductCreateViewModel();
+
+            //then use the view model rather than view data for more flexibility
+            ViewModel.productTypes = _context.ProductType.Select(c => new SelectListItem
+            {
+                Text = c.Label,
+                Value = c.ProductTypeId.ToString()
+            }
+            ).ToList();
+
+            //ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+            return View(ViewModel);
         }
 
         // POST: Products/Create
@@ -66,13 +78,15 @@ namespace Bangazon.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,City,ImagePath,Active,ProductTypeId")] Product product)
         {
             //We weren't getting a user, we were only getting a userId, so we needed to remove User from the ModelState so the conditional would return true.
             //We may need to change it to product.User later if we use a view model.
-            ModelState.Remove("User");
-           //TODO::  CONDITIONALLY RENDER NAV BAR, AND FIGURE OUT HOW TO GET THE FORM TO WORK WITHOUT GIVING 
-           //THE USER THE OPTION TO SELECT FROM A LIST OF USERS
+            ModelState.Remove("product.User");
+            ModelState.Remove("product.UserId");
+            //TODO::FIGURE OUT HOW TO GET THE FORM TO WORK WITHOUT GIVING 
+            //THE USER THE OPTION TO SELECT FROM A LIST OF USERS
+            ProductCreateViewModel ViewModel = new ProductCreateViewModel();
             if (ModelState.IsValid)
             {
                 //We added the next two lines to get the user to check the ID.
@@ -86,9 +100,15 @@ namespace Bangazon.Controllers
                    id = product.ProductId
                 });
             }
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
-            return View(product);
+            //you can put this in an Else, but it basically is an else statement because of the return above
+            ViewModel.productTypes = _context.ProductType.Select(c => new SelectListItem
+            {
+                Text = c.Label,
+                Value = c.ProductTypeId.ToString()
+            }).ToList();
+            //ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
+            return View(ViewModel);
         }
 
         // GET: Products/Edit/5
