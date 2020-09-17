@@ -44,7 +44,12 @@ namespace Bangazon.Controllers
             var product = await _context.Product
                 .Include(p => p.ProductType)
                 .Include(p => p.User)
+                .Include(p => p.OrderProducts)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
+
+            //Take the quantity and subtract the count for OrderProducts to get the current inventory count for the product.
+            product.Quantity -= product.OrderProducts.Count();
+            
             if (product == null)
             {
                 return NotFound();
@@ -80,6 +85,7 @@ namespace Bangazon.Controllers
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+                
             }
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
