@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bangazon.Controllers
 {
@@ -14,9 +15,14 @@ namespace Bangazon.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public PaymentTypesController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        public PaymentTypesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: PaymentTypes
@@ -59,8 +65,12 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
         {
+            ModelState.Remove("User");
+
             if (ModelState.IsValid)
             {
+                var user = await GetCurrentUserAsync();
+                paymentType.UserId = user.Id;
                 _context.Add(paymentType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,10 +108,14 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("User");
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = await GetCurrentUserAsync();
+                    paymentType.UserId = user.Id;
                     _context.Update(paymentType);
                     await _context.SaveChangesAsync();
                 }
