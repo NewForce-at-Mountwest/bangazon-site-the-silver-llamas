@@ -68,6 +68,8 @@ namespace Bangazon.Controllers
             }
             ).ToList();
 
+            ViewModel.productTypes.Insert(0, new SelectListItem() { Value = "0", Text = "Choose Product Type" });
+
             //ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
             //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View(ViewModel);
@@ -106,6 +108,9 @@ namespace Bangazon.Controllers
                 Text = c.Label,
                 Value = c.ProductTypeId.ToString()
             }).ToList();
+
+            
+
             //ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(ViewModel);
