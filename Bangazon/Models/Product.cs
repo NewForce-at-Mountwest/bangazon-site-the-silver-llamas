@@ -33,7 +33,7 @@ namespace Bangazon.Models
 
         [Required]
         public string UserId {get; set;}
-
+        
         public string City {get; set;}
 
         public string ImagePath {get; set;}
@@ -45,8 +45,9 @@ namespace Bangazon.Models
 
         [Required]
         [Display(Name="Product Category")]
+        [Range(1, 1000, ErrorMessage = "Please Select a Product Category")]
         public int ProductTypeId { get; set; }
-
+        
         public ProductType ProductType { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
