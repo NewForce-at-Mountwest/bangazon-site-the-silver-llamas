@@ -73,6 +73,11 @@ namespace Bangazon.Controllers
             }
             ).ToList();
 
+            //forces user to choose a product category before continuing.  Error message displays due to 
+            //data annotation on ProductTypeId requiring the foreign key to be greater than 0 or display
+            //an error message.  Otherwise, this will give the productType an id of 0 and try to send to database
+            ViewModel.productTypes.Insert(0, new SelectListItem() { Value = "0", Text = "--Select Product Category--" });
+
             //ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
             //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View(ViewModel);
@@ -89,8 +94,7 @@ namespace Bangazon.Controllers
             //We may need to change it to product.User later if we use a view model.
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
-            //TODO::FIGURE OUT HOW TO GET THE FORM TO WORK WITHOUT GIVING 
-            //THE USER THE OPTION TO SELECT FROM A LIST OF USERS
+            
             ProductCreateViewModel ViewModel = new ProductCreateViewModel();
             if (ModelState.IsValid)
             {
@@ -111,6 +115,9 @@ namespace Bangazon.Controllers
                 Text = c.Label,
                 Value = c.ProductTypeId.ToString()
             }).ToList();
+
+            
+
             //ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(ViewModel);
