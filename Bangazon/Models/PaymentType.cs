@@ -25,6 +25,9 @@ namespace Bangazon.Models
     public string AccountNumber { get; set; }
 
     [Required]
+    public bool ActivePayment { get; set; }
+
+    [Required]
     public string UserId {get; set;}
 
     [Required]
