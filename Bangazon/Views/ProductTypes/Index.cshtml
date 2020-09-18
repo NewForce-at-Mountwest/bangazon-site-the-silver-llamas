@@ -23,7 +23,8 @@
         {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Label)
+                @Html.DisplayFor(modelItem => item.Label) (@item.Products.Count)
+                
 
                 @foreach (Product thing in item.Products.Take(3))
                 {

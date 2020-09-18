@@ -22,7 +22,7 @@ namespace Bangazon.Controllers
         // GET: ProductTypes
         public async Task<IActionResult> Index()
         {
-            //get count of all products, but take() to display only 3 products.
+            //.Take(3) is added on to the ForEach for the products in the index view to display the first 3 products only
             var ProductType = await _context.ProductType
                .Include(p => p.Products)
                  .ToListAsync();
