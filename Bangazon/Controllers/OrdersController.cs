@@ -138,6 +138,43 @@ namespace Bangazon.Controllers
             return View(order);
         }
 
+
+        
+        public async Task<IActionResult> AddToOrder(int id)
+        {
+            var user = await GetCurrentUserAsync();
+
+            var order = _context.Order
+                .Where(o => o.UserId == user.Id && o.PaymentTypeId == null).ToList();
+
+            OrderProduct orderProduct = new OrderProduct()
+            {
+                OrderId = order[0].OrderId,
+                ProductId = id
+            };
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(orderProduct);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View();
+            
+        }
+
+        
+        //public async Task<IActionResult> AddToOrderPost()
+        //{
+         
+        //    ViewData["OrderId"] = new SelectList(_context.Order, "OrderId", "UserId", orderProduct.OrderId);
+        //    ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "Description", orderProduct.ProductId);
+        //    return View(orderProduct);
+        //}
+
+
+
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -173,5 +210,9 @@ namespace Bangazon.Controllers
         {
             return _context.Order.Any(e => e.OrderId == id);
         }
+
+      
     }
+
+  
 }
