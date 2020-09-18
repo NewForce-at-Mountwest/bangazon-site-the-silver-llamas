@@ -4,14 +4,16 @@ using Bangazon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bangazon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200917190010_databaseErrorFix")]
+    partial class databaseErrorFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,8 +102,7 @@ namespace Bangazon.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "23a96448-d5e3-47ed-aed8-f6c852db4fe7",
-                            // ConcurrencyStamp = "e34e36a1-70e1-43f3-98c0-141fb3050a74",
+                            ConcurrencyStamp = "e34e36a1-70e1-43f3-98c0-141fb3050a74",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -109,8 +110,7 @@ namespace Bangazon.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPP5fuYQ9b/36CnZve6qrSntYyinemAAk380ATlQOYd/s+ZsgZr6SCwHxHpWlDXCUA==",
-                            // PasswordHash = "AQAAAAEAACcQAAAAED8ecyNPfqe2WfYgbFjsx2nPkHYcn80Aj8xhtXeZTGz7ek3WkJP4cHFgt4wbi5Km3A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAED8ecyNPfqe2WfYgbFjsx2nPkHYcn80Aj8xhtXeZTGz7ek3WkJP4cHFgt4wbi5Km3A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             StreetAddress = "123 Infinity Way",
@@ -206,9 +206,6 @@ namespace Bangazon.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.Property<bool>("ActivePayment")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
@@ -234,7 +231,6 @@ namespace Bangazon.Migrations
                         {
                             PaymentTypeId = 1,
                             AccountNumber = "86753095551212",
-                            ActivePayment = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "American Express",
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
@@ -243,7 +239,6 @@ namespace Bangazon.Migrations
                         {
                             PaymentTypeId = 2,
                             AccountNumber = "4102948572991",
-                            ActivePayment = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Discover",
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
