@@ -218,9 +218,22 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
+            Product product = await _context.Product.FindAsync(id);
+            try
+            {
+                _context.Product.Remove(product);
+                await _context.SaveChangesAsync();
+            
+            }
+            catch (Exception) when (product.Active == true)
+            {
+                product.Active = false;
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+            }
+            //var product = await _context.Product.FindAsync(id);
+           // _context.Product.Remove(product);
+           // await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
