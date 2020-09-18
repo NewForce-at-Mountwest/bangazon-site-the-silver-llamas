@@ -134,7 +134,7 @@ namespace Bangazon.Controllers
 
 
         
-        public async Task<IActionResult> AddToOrder(int? id)
+        public async Task<IActionResult> AddToOrder(int id)
         {
             var user = await GetCurrentUserAsync();
 
@@ -144,7 +144,7 @@ namespace Bangazon.Controllers
             OrderProduct orderProduct = new OrderProduct()
             {
                 OrderId = order[0].OrderId,
-                ProductId = id.Value
+                ProductId = id
             };
 
             if (ModelState.IsValid)
@@ -154,7 +154,7 @@ namespace Bangazon.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(orderProduct);
+            return View();
             
         }
 
