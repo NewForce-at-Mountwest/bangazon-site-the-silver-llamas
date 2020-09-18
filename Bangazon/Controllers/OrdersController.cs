@@ -38,7 +38,12 @@ namespace Bangazon.Controllers
             {
                 var user = await GetCurrentUserAsync();
 
-                var openOrder = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.PaymentTypeId == null);
+                var openOrder = await _context.Order
+                    .Include(o => o.PaymentType)
+                    .Include(o => o.User)
+                    .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.Product)
+                    .FirstOrDefaultAsync(o => o.User == user && o.PaymentTypeId == null);
 
                 return View(openOrder);
             }
