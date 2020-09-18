@@ -30,8 +30,19 @@ namespace Bangazon.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            //added user information, so it would only show the user's products for sale
+            ApplicationUser loggedInUser = await GetCurrentUserAsync();
+           
+           
+
+                var product = await _context.Product
+                    .Include(p => p.ProductType)
+                    .Include(p => p.User)
+                    .Where(product => product.UserId == loggedInUser.Id)
+                    .ToListAsync();
+                return View(product);
+          
+            //return View(product);
         }
 
         // GET: Products/Details/5
