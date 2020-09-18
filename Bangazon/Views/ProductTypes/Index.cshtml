@@ -27,9 +27,13 @@
 
                 @foreach (Product thing in item.Products)
                 {
-                    <p>
-                        @thing.Title
-                    </p>
+                <p>
+                    @Html.ActionLink($"{thing.Title}", "Details", "Products", new
+               {
+                   id = thing.ProductId
+               })
+                    
+                </p>
                 }
             </td>
 
