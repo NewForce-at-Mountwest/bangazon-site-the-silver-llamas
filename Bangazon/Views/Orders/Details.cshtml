@@ -44,16 +44,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var employee in Model.listOfEmployees)
+                    @foreach (var product in Model.OrderProducts)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => employee.FirstName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => employee.LastName)
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => product.Product.Title)
+                        </td>
+                        <td>
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
