@@ -28,7 +28,7 @@ namespace Bangazon.Controllers
         // GET: PaymentTypes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.PaymentType.Include(p => p.User);
+            var applicationDbContext = _context.PaymentType.Include(p => p.User).Where(p => p.ActivePayment == true);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -68,11 +68,13 @@ namespace Bangazon.Controllers
             //ModelState.Remove("User");
             ModelState.Remove("User");
             ModelState.Remove("UserId");
+            ModelState.Remove("ActivePayment");
 
             if (ModelState.IsValid)
             {
                 var user = await GetCurrentUserAsync();
                 paymentType.UserId = user.Id;
+                paymentType.ActivePayment = true;
                 _context.Add(paymentType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -112,6 +114,7 @@ namespace Bangazon.Controllers
 
             ModelState.Remove("User");
             ModelState.Remove("UserId");
+            ModelState.Remove("ActivePayment");
 
             if (ModelState.IsValid)
             {
@@ -119,6 +122,7 @@ namespace Bangazon.Controllers
                 {
                     var user = await GetCurrentUserAsync();
                     paymentType.UserId = user.Id;
+                    paymentType.ActivePayment = true;
                     _context.Update(paymentType);
                     await _context.SaveChangesAsync();
                 }
@@ -164,7 +168,9 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var paymentType = await _context.PaymentType.FindAsync(id);
-            _context.PaymentType.Remove(paymentType);
+            //_context.PaymentType.Remove(paymentType);
+            paymentType.ActivePayment = false;
+            _context.Update(paymentType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
