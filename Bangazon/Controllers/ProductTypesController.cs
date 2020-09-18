@@ -22,7 +22,11 @@ namespace Bangazon.Controllers
         // GET: ProductTypes
         public async Task<IActionResult> Index()
         {
-            var ProductType = await _context.ProductType.Include(p => p.Products).ToListAsync();
+            var ProductType = await _context.ProductType
+               .Include(p => p.Products).Take(3)
+                 .ToListAsync();
+            
+
             return View(ProductType);
         }
 
