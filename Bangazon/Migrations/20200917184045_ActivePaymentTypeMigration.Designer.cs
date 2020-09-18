@@ -4,14 +4,16 @@ using Bangazon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bangazon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200917184045_ActivePaymentTypeMigration")]
+    partial class ActivePaymentTypeMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,7 +103,6 @@ namespace Bangazon.Migrations
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "23a96448-d5e3-47ed-aed8-f6c852db4fe7",
-                            // ConcurrencyStamp = "e34e36a1-70e1-43f3-98c0-141fb3050a74",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -110,7 +111,6 @@ namespace Bangazon.Migrations
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
                             PasswordHash = "AQAAAAEAACcQAAAAEPP5fuYQ9b/36CnZve6qrSntYyinemAAk380ATlQOYd/s+ZsgZr6SCwHxHpWlDXCUA==",
-                            // PasswordHash = "AQAAAAEAACcQAAAAED8ecyNPfqe2WfYgbFjsx2nPkHYcn80Aj8xhtXeZTGz7ek3WkJP4cHFgt4wbi5Km3A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             StreetAddress = "123 Infinity Way",
