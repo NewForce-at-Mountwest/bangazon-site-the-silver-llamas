@@ -25,7 +25,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Label)
 
-                @foreach (Product thing in item.Products)
+                @foreach (Product thing in item.Products.Take(3))
                 {
                 <p>
                     @Html.ActionLink($"{thing.Title}", "Details", "Products", new
