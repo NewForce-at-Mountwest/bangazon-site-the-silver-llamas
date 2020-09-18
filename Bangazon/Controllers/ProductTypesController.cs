@@ -22,7 +22,13 @@ namespace Bangazon.Controllers
         // GET: ProductTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProductType.ToListAsync());
+            //.Take(3) is added on to the ForEach for the products in the index view to display the first 3 products only
+            var ProductType = await _context.ProductType
+               .Include(p => p.Products)
+                 .ToListAsync();
+            
+
+            return View(ProductType);
         }
 
         // GET: ProductTypes/Details/5
