@@ -60,12 +60,12 @@
                 </tbody>
             </table>
         </dd>
-        <dt>
-            Total: $@Model.OrderProducts.Where(i => i.Product.Active == true).Sum(i => i.Product.Price)<br /><br />
-            <input type="submit" value="Cancel Order" class="btn btn-outline-danger" />
-            <a asp-action="Edit" asp-route-id="@Model.OrderId" class="btn btn-outline-success">Complete Order</a>
-        </dt>
     </dl>
+</div>
+<div class="text-right">
+    <strong>Total: $@Model.OrderProducts.Where(i => i.Product.Active == true).Sum(i => i.Product.Price)</strong><br /><br />
+    <input type="submit" value="Cancel Order" class="btn btn-outline-danger" />
+    <a asp-action="Edit" asp-route-id="@Model.OrderId" class="btn btn-outline-success">Complete Order</a>
 </div>
 <div>
     <a asp-action="Index">View All Orders</a>
