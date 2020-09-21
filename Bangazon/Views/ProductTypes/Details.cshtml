@@ -10,13 +10,23 @@
     <h4>ProductType</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Label)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
+
             @Html.DisplayFor(model => model.Label)
+
         </dd>
     </dl>
+
+    <h4>Products</h4>
+    <ul>
+        @foreach (Product item in Model.Products)
+        {
+            <li>@item.Title | @item.Quantity units | $@item.Price</li>
+        }
+    </ul>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ProductTypeId">Edit</a> |

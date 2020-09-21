@@ -40,11 +40,15 @@ namespace Bangazon.Controllers
             }
 
             var productType = await _context.ProductType
+                .Include(p => p.Products)
+                .ThenInclude(pr => pr.OrderProducts)
                 .FirstOrDefaultAsync(m => m.ProductTypeId == id);
             if (productType == null)
             {
                 return NotFound();
             }
+
+            productType.Products.ToList().ForEach(product => product.Quantity -= product.OrderProducts.Count());
 
             return View(productType);
         }
