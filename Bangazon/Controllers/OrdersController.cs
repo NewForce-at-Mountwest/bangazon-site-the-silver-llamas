@@ -133,39 +133,71 @@ namespace Bangazon.Controllers
         }
 
 
-        
+
         public async Task<IActionResult> AddToOrder(int id)
         {
+            //Get the logged-in user
             var user = await GetCurrentUserAsync();
 
+            //Get the order from the open order from the database for the logged-in user
             var order = _context.Order
                 .Where(o => o.UserId == user.Id && o.PaymentTypeId == null).ToList();
 
-            OrderProduct orderProduct = new OrderProduct()
+            //If the order list contains an open order for the logged-in user
+            if (order.Count != 0)
             {
-                OrderId = order[0].OrderId,
-                ProductId = id
-            };
+                //Create an OrderProduct based on the user and order variables
+                OrderProduct orderProduct = new OrderProduct()
+                {
+                    OrderId = order[0].OrderId,
+                    ProductId = id
+                };
 
-            if (ModelState.IsValid)
+                //Add the OrderProduct to the database
+                if (ModelState.IsValid)
+                {
+                    _context.Add(orderProduct);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            //If an open order isn't found
+            else
             {
-                _context.Add(orderProduct);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //Create an open order
+                Order neworder = new Order()
+                {
+                    UserId = user.Id,
+                    User = user
+                };
+
+
+                if (ModelState.IsValid)
+                {
+                    //Add the open order to the database
+                    _context.Add(neworder);
+                    await _context.SaveChangesAsync();
+
+                    //Get the open order from the database
+                    order = _context.Order.Where(o => o.UserId == user.Id && o.PaymentType == null).ToList();
+
+                    //Create an OrderProduct based on the user and reassigned order variables
+                    OrderProduct orderProduct = new OrderProduct()
+                    {
+                        OrderId = order[0].OrderId,
+                        ProductId = id
+                    };
+
+                    //Add the OrderProduct to the database
+                    _context.Add(orderProduct);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
-            return View();
-            
+            //If all else fails, return to the Products Details page that you were on
+            return RedirectToAction("Details", "Products", new { id = id });
         }
-
-        
-        //public async Task<IActionResult> AddToOrderPost()
-        //{
-         
-        //    ViewData["OrderId"] = new SelectList(_context.Order, "OrderId", "UserId", orderProduct.OrderId);
-        //    ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "Description", orderProduct.ProductId);
-        //    return View(orderProduct);
-        //}
 
 
 

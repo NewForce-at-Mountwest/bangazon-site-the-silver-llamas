@@ -23,18 +23,19 @@
         {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Label) (@item.Products.Count)
-                
+
+                <a asp-action="Details" asp-route-id="@item.ProductTypeId"> @Html.DisplayFor(modelItem => item.Label) (@item.Products.Count)</a>
+
 
                 @foreach (Product thing in item.Products.Take(3))
                 {
-                <p>
-                    @Html.ActionLink($"{thing.Title}", "Details", "Products", new
-               {
-                   id = thing.ProductId
-               })
-                    
-                </p>
+                    <p>
+                        @Html.ActionLink($"{thing.Title}", "Details", "Products", new
+                   {
+                       id = thing.ProductId
+                   })
+
+                    </p>
                 }
             </td>
 
