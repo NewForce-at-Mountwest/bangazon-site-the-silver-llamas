@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bangazon.Controllers
 {
@@ -14,10 +15,16 @@ namespace Bangazon.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public OrderProductsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+
+        public OrderProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: OrderProducts
         public async Task<IActionResult> Index()
@@ -152,10 +159,12 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+           
+
             var orderProduct = await _context.OrderProduct.FindAsync(id);
             _context.OrderProduct.Remove(orderProduct);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Orders", new {id = orderProduct.OrderId });
         }
 
         private bool OrderProductExists(int id)

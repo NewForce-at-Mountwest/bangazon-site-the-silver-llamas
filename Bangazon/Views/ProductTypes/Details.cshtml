@@ -24,7 +24,10 @@
     <ul>
         @foreach (Product item in Model.Products)
         {
+            if (item.Active == true)
+            {
             <li>@item.Title | @item.Quantity units | $@item.Price</li>
+            }
         }
     </ul>
 </div>

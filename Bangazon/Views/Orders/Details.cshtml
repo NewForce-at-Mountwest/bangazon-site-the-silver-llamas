@@ -52,7 +52,7 @@
                                 @Html.DisplayFor(modelItem => product.Product.Price)
                             </td>
                             <td>
-                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                <a asp-controller="OrderProducts" asp-action="Delete" asp-route-id="@product.OrderProductId"> <input type="submit" value="Delete" class="btn btn-danger" /></a>
                             </td>
                         </tr>
                         }
