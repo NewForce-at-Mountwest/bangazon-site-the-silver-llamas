@@ -42,6 +42,8 @@
                 <tbody>
                     @foreach (var product in Model.OrderProducts)
                     {
+                        if (product.Product.Active == true)
+                        {
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => product.Product.Title)
@@ -53,12 +55,13 @@
                                 <input type="submit" value="Delete" class="btn btn-danger" />
                             </td>
                         </tr>
+                        }
                     }
                 </tbody>
             </table>
         </dd>
         <dt>
-            Total: $@Model.OrderProducts.Sum(i => i.Product.Price)<br /><br />
+            Total: $@Model.OrderProducts.Where(i => i.Product.Active == true).Sum(i => i.Product.Price)<br /><br />
             <input type="submit" value="Cancel Order" class="btn btn-outline-danger" />
             <input type="submit" value="Complete Order" class="btn btn-outline-success" />
         </dt>
