@@ -85,6 +85,8 @@ namespace Bangazon.Controllers
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var user = await GetCurrentUserAsync();
+
             if (id == null)
             {
                 return NotFound();
@@ -95,7 +97,7 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
+            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType.Where(o => o.UserId == user.Id), "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
         }
