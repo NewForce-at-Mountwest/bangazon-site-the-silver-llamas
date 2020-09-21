@@ -40,11 +40,16 @@ namespace Bangazon.Controllers
             }
 
             var productType = await _context.ProductType
+                .Include(p => p.Products)
+                .ThenInclude(pr => pr.OrderProducts)
                 .FirstOrDefaultAsync(m => m.ProductTypeId == id);
             if (productType == null)
             {
                 return NotFound();
             }
+
+            //The database does not reflect the true quantity for a Product, so you have to get each Product in the Products collection inside of each ProductType and subtract the number of OrderProducts that have been created for that Product.
+            productType.Products.ToList().ForEach(product => product.Quantity -= product.OrderProducts.Count());
 
             return View(productType);
         }
