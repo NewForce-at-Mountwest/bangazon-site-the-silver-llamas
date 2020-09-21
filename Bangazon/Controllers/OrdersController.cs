@@ -117,7 +117,6 @@ namespace Bangazon.Controllers
             ModelState.Remove("User");
             ModelState.Remove("UserId");
             ModelState.Remove("DateCompleted");
-            //ModelState.Remove("PaymentTypeId");
 
             if (ModelState.IsValid)
             {
@@ -126,7 +125,6 @@ namespace Bangazon.Controllers
                     var user = await GetCurrentUserAsync();
                     order.UserId = user.Id;
                     order.DateCompleted = DateTime.Now;
-                    //order.PaymentTypeId = user.PaymentTypes.First(p => p.PaymentTypeId);
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
