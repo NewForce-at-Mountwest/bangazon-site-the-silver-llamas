@@ -172,7 +172,8 @@ namespace Bangazon.Controllers
                 {
                     _context.Add(orderProduct);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Details", "Orders", new { id = orderProduct.OrderId });
+
                 }
             }
             //If an open order isn't found
@@ -205,7 +206,8 @@ namespace Bangazon.Controllers
                     //Add the OrderProduct to the database
                     _context.Add(orderProduct);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Details", "Orders", new { id = orderProduct.OrderId });
+
                 }
             }
 
