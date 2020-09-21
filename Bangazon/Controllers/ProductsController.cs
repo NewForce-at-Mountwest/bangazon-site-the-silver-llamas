@@ -30,8 +30,19 @@ namespace Bangazon.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            //added user information, so it would only show the user's products for sale
+            ApplicationUser loggedInUser = await GetCurrentUserAsync();
+           
+           
+
+                var product = await _context.Product
+                    .Include(p => p.ProductType)
+                    .Include(p => p.User)
+                    .Where(product => product.UserId == loggedInUser.Id)
+                    .ToListAsync();
+                return View(product);
+          
+            //return View(product);
         }
 
         // GET: Products/Details/5
@@ -207,9 +218,22 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
+            Product product = await _context.Product.FindAsync(id);
+            try
+            {
+                _context.Product.Remove(product);
+                await _context.SaveChangesAsync();
+            
+            }
+            catch (Exception) when (product.Active == true)
+            {
+                product.Active = false;
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+            }
+            //var product = await _context.Product.FindAsync(id);
+           // _context.Product.Remove(product);
+           // await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
