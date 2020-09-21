@@ -32,23 +32,26 @@ namespace Bangazon.Controllers
         }
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details()
         {
-            if (id == null)
+
+                var user = await GetCurrentUserAsync();
+
+                var openOrder = await _context.Order
+                    .Include(o => o.PaymentType)
+                    .Include(o => o.User)
+                    .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.Product)
+                    .FirstOrDefaultAsync(o => o.User == user && o.PaymentTypeId == null);
+
+                
+           
+            if (openOrder == null)
             {
-                return NotFound();
+                return View("OrderNotFoundErrorView");
             }
 
-            var order = await _context.Order
-                .Include(o => o.PaymentType)
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
+            return View(openOrder);
         }
 
         // GET: Orders/Create
