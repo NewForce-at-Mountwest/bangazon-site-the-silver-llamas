@@ -63,7 +63,7 @@
         <dt>
             Total: $@Model.OrderProducts.Where(i => i.Product.Active == true).Sum(i => i.Product.Price)<br /><br />
             <input type="submit" value="Cancel Order" class="btn btn-outline-danger" />
-            <input type="submit" value="Complete Order" class="btn btn-outline-success" />
+            <a asp-action="Edit" asp-route-id="@Model.OrderId" class="btn btn-outline-success">Complete Order</a>
         </dt>
     </dl>
 </div>
