@@ -27,7 +27,9 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            var user = await GetCurrentUserAsync();
+
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User).Where(o => o.User == user);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -83,6 +85,8 @@ namespace Bangazon.Controllers
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var user = await GetCurrentUserAsync();
+
             if (id == null)
             {
                 return NotFound();
@@ -93,7 +97,7 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
+            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType.Where(o => o.UserId == user.Id), "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
         }
@@ -110,10 +114,17 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
+            ModelState.Remove("DateCompleted");
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = await GetCurrentUserAsync();
+                    order.UserId = user.Id;
+                    order.DateCompleted = DateTime.Now;
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
@@ -128,7 +139,7 @@ namespace Bangazon.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ThankYou));
             }
             ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
@@ -161,8 +172,7 @@ namespace Bangazon.Controllers
                 {
                     _context.Add(orderProduct);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "Orders", new { id = orderProduct.OrderId });
-
+                    return RedirectToAction(nameof(Index));
                 }
             }
             //If an open order isn't found
@@ -195,8 +205,7 @@ namespace Bangazon.Controllers
                     //Add the OrderProduct to the database
                     _context.Add(orderProduct);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "Orders", new { id = orderProduct.OrderId });
-
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
@@ -240,6 +249,11 @@ namespace Bangazon.Controllers
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderId == id);
+        }
+
+        public ActionResult ThankYou()
+        {
+            return View();
         }
 
       
