@@ -117,6 +117,7 @@ namespace Bangazon.Controllers
             ModelState.Remove("User");
             ModelState.Remove("UserId");
             ModelState.Remove("DateCompleted");
+            //ModelState.Remove("PaymentTypeId");
 
             if (ModelState.IsValid)
             {
@@ -125,6 +126,7 @@ namespace Bangazon.Controllers
                     var user = await GetCurrentUserAsync();
                     order.UserId = user.Id;
                     order.DateCompleted = DateTime.Now;
+                    //order.PaymentTypeId = user.PaymentTypes.First(p => p.PaymentTypeId);
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
@@ -139,7 +141,7 @@ namespace Bangazon.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ThankYou));
             }
             ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
@@ -249,6 +251,11 @@ namespace Bangazon.Controllers
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderId == id);
+        }
+
+        public ActionResult ThankYou()
+        {
+            return View();
         }
 
       
